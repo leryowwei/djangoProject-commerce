@@ -1,0 +1,45 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>My Watchlist</h2>
+    {% if user.is_authenticated %}
+        {% if watchlist|length > 0 %}
+            {% for watch in watchlist %}
+                {% with listing=watch.listing %}
+                    <div>
+                       <table style="width:80%">
+                            <tr>
+                                <td rowspan="6" class='td-index-img'><img alt={{ listing.name }} src="{{ listing.image }}" style="width:250px"></td>
+                                <td class='td-index-name'><a href="{% url 'listing' listing_name=listing.name  %}">{{ listing.name }}</a></td>
+                            </tr>
+                            <tr>
+                                <td>{{ listing.description }}</td>
+                            </tr>
+                            <tr>
+                                <td>Current Bid Price: ${{ listing.get_highest_bid_price }}</td>
+                            </tr>
+                            <tr>
+                                <td>Created On: {{ listing.created_on }}</td>
+                            </tr>
+                            <tr>
+                                {% if listing.active %}
+                                    <td style="color:green">Status: Active</td>
+                                {% else %}
+                                    <td style="color:red">Status: Closed</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                <td><a class="btn-red" href="{% url 'remove_watchlist' listing_name=listing.name %}">Remove from Watchlist</a></td>
+                            </tr>
+                       </table>
+                    </div>
+                {% endwith %}
+                <hr>
+            {% endfor %}
+        {% else %}
+            You are not watching any listing. To add listing to watchlist, visit the listing's page and click 'Add to Watchlist'.
+        {% endif %}
+    {% else %}
+        Please login to access your watchlist/ register for an account to create your own watchlist.
+    {% endif %}
+{% endblock %}

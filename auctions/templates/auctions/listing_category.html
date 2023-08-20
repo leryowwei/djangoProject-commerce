@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings for {{ category_name }}</h2>
+    {% if listings|length > 0 %}
+        {% for listing in listings %}
+            <div>
+               <table style="width:80%">
+                    <tr>
+                        <td rowspan="4" class='td-index-img'><img alt={{ listing.name }} src="{{ listing.image }}" style="width:250px"></td>
+                        <td class='td-index-name'><a href="{% url 'listing' listing_name=listing.name  %}">{{ listing.name }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>{{ listing.description }}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Bid Price: ${{ listing.get_highest_bid_price }}</td>
+                    </tr>
+                    <tr>
+                        <td>Created On: {{ listing.created_on }}</td>
+                    </tr>
+               </table>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        No active listing under {{ category_name }}.
+    {% endif %}
+{% endblock %}

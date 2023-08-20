@@ -1,0 +1,121 @@
+body {
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+table{
+    overflow: hidden;
+}
+
+/* styles for table in index page */
+
+td {
+  height: 40px;
+}
+
+table td.td-index-img{
+     width: 35%;
+     padding-right: 10%;
+}
+
+table td.td-index-name{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+
+table td.td-listing-img{
+     width: 600px;
+     padding-right: 200px;
+}
+
+table td.td-listing-highest-bid{
+    font-size: 3em;
+    font-weight: bold;
+}
+
+table td.td-listing-starting-bid{
+    font-size: 1em;
+    font-weight: italic;
+}
+
+
+table td.td-listing-blank{
+    height: 40%;
+}
+
+/* style for error message */
+.msg-error{
+    color: red !important;
+    list-style: none;
+}
+/* style for comments */
+div.comments{
+    padding: 3px;
+}
+
+p.comment-name{
+    font-weight:bold;
+}
+
+span.comment-created-on{
+    color: grey;
+    font-weight: normal;
+    float: right;
+    padding-right: 50px;
+}
+
+/* link overwrite */
+a{
+    color: black;
+}
+
+a:visited{
+	color: inherit;
+}
+
+a:hover, a:focus{
+    color: grey;
+    text-decoration: none;
+}
+
+/* button styling */
+button, button:focus  {
+    background-color: #f4511e;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    opacity: 1;
+    transition: 0.2s;
+    outline: none;
+    border-radius: 5px;
+}
+
+a.btn-red, a.btn-green, a.btn-red:focus, a.btn-green:focus  {
+    border: none;
+    color: white !important;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    opacity: 1;
+    transition: 0.2s;
+    outline: none;
+    border-radius: 5px;
+}
+
+a.btn-green {
+    background-color: green;
+}
+
+a.btn-red {
+    background-color: #ff4d4d;
+}
+
+
+button:hover, a.btn-add-watchlist::hover, a.btn-remove-watchlist::hover {
+    opacity: 0.6;
+}

@@ -1,0 +1,69 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create Listing</h2>
+    {% if user.is_authenticated %}
+        {% if form.errors %}
+            {% for error in form.non_field_errors  %}
+              <p class='msg-error'>Error: {{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <table style="width:80%">
+                <tr>
+                    <td>{{ form.name.label }}</td>
+                    <td>{{ form.name }}</td>
+                </tr>
+                <tr>
+                    {% if form.name.errors %}
+                        <td class='msg-error' colspan="2">{{ form.name.label}} error: {{ form.name.errors | striptags }}</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>{{ form.description.label }}</td>
+                    <td>{{ form.description }}</td>
+                </tr>
+                <tr>
+                    {% if form.description.errors %}
+                        <td class='msg-error' colspan="2">{{ form.description.label}} error: {{ form.description.errors | striptags }}</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>URL to Image</td>
+                    <td>{{ form.image }}</td>
+                </tr>
+                <tr>
+                    {% if form.image.errors %}
+                        <td class='msg-error' colspan="2">{{ form.image.label}} error: {{ form.image.errors | striptags }}</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>{{ form.starting_bid.label }} ($)</td>
+                    <td>{{ form.starting_bid }}</td>
+                </tr>
+                <tr>
+                    {% if form.starting_bid.errors %}
+                        <td class='msg-error' colspan="2">{{ form.starting_bid.label}} error: {{ form.starting_bid.errors | striptags }}</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>{{ form.category.label }}</td>
+                    <td>{{ form.category }}</td>
+                </tr>
+                <tr>
+                    {% if form.category.errors %}
+                        <td class='msg-error' colspan="2">{{ form.category.label}} error: {{ form.category.errors | striptags }}</td>
+                    {% endif %}
+                </tr>
+            </table>
+            {{ form.originator.as_hidden }}
+            {{ form.active.as_hidden }}
+            <br>
+            <button value="Submit">Submit</button>
+        </form>
+    {% else %}
+        Please login or register to create a listing.
+    {% endif %}
+{% endblock %}
+

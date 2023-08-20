@@ -1,0 +1,115 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Listing: {{ listing.name }}</h2>
+    {% if user.is_authenticated %}
+        {% if watch %}
+            <a class="btn-red" href="{% url 'remove_watchlist' listing_name=listing.name %}">Remove from Watchlist</a>
+        {% else %}
+            <a class="btn-green" href="{% url 'add_watchlist' listing_name=listing.name %}">Add to Watchlist</a>
+        {% endif %}
+    {% else %}
+        Please sign in/ register to add to watchlist.
+    {% endif %}
+    <br>
+    <div>
+       <table style="width:100%">
+            <tr>
+                <td rowspan="6" class='td-listing-img'><img alt={{ listing.name }} src="{{ listing.image }}" style="width:400px"></td>
+                <td class='td-listing-blank'></td>
+            </tr>
+            <tr>
+                <td>{{ listing.description }}</td>
+            </tr>
+            <tr>
+                <td class='td-listing-highest-bid'>${{ listing.get_highest_bid_price }}</td>
+            </tr>
+            <tr>
+                <td class='td-listing-starting-bid'>Starting Bid: ${{ listing.starting_bid }}</td>
+            </tr>
+            <tr>
+                {% if user.is_authenticated and user.username|stringformat:'s' != listing.originator|stringformat:'s'%}
+                    {% if user.username|stringformat:'s' == listing.get_highest_bidder|stringformat:'s' %}
+                        <td>{{ listing.get_no_of_bids }} bid(s) so far. You are the highest bidder!</td>
+                    {% elif user.username|stringformat:'s' != listing.get_highest_bidder|stringformat:'s' and user in listing.get_all_bidders %}
+                        <td>{{ listing.get_no_of_bids }} bid(s) so far. You are not the highest bidder, up the bid now!</td>
+                    {% elif user.username|stringformat:'s' != listing.get_highest_bidder|stringformat:'s' and user not in listing.get_all_bidders %}
+                        <td>{{ listing.get_no_of_bids }} bid(s) so far. You have not submitted a bid for this listing. Submit your bid now!</td>
+                    {% endif %}
+                {% elif user.is_authenticated and user.username|stringformat:'s' == listing.originator|stringformat:'s' and listing.get_highest_bidder %}
+                    <td>{{ listing.get_no_of_bids }} bid(s) so far. {{ listing.get_highest_bidder|stringformat:'s' }} is the highest bidder.</td>
+                {% else %}
+                    <td>{{ listing.get_no_of_bids }} bid(s) so far.</td>
+                {% endif %}
+                <br>
+            </tr>
+            <tr>
+                <td>
+                    {% if listing.active %}
+                        {% if user.is_authenticated %}
+                            {% if user.username|stringformat:'s' == listing.originator|stringformat:'s' %}
+                                    <a class="btn-red" href="{% url 'close_bid' listing_name=listing.name %}" onclick="return confirm('Are you sure you want to close the bid?');">Close Bid</a>
+                            {% else %}
+                                {% if form.errors %}
+                                    {% for error in form.non_field_errors  %}
+                                      <p class='msg-error'>Error: {{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.listing.as_hidden }}
+                                    {{ form.bidder.as_hidden }}
+                                    {{ form.price }}
+                                    <button value="submit">Submit Bid</button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            Please register/ sign in to place a bid.
+                        {% endif %}
+                    {% elif user.is_authenticated and user.username|stringformat:'s' == listing.get_highest_bidder|stringformat:'s' %}
+                        <p style="font-weight:bold; color:green">You have won this bid! The originator will be contacting you soon.</p>
+                    {% else %}
+                        <p style="font-weight:bold">Bid is now closed.</p>
+                    {% endif %}
+                </td>
+            </tr>
+       </table>
+    </div>
+    <hr>
+    <div>
+        <h4>Details:</h4>
+        <ul>
+            <li>Listed by: {{ listing.originator }}</li>
+            <li>Created: {{ listing.created_on }}</li>
+            <li>Category: {{ listing.category }}</li>
+        </ul>
+    </div>
+    <hr>
+    <div>
+        <h4>Comments:</h4>
+        {% if user.is_authenticated %}
+            <a href="{% url 'add_comment' listing_name=listing.name %}">Click to Add Comment</a>
+            <hr>
+        {% else %}
+            Please sign in/ register to add a comment.
+            <hr>
+        {% endif %}
+        {% if listing.get_comments %}
+            {% for comment in listing.get_comments %}
+            <div class="comments">
+                <p class="comment-name">
+                    {{ comment.author }}
+                    <span class="comment-created-on">
+                        {{ comment.created_on }}
+                    </span>
+                </p>
+                {{ comment.body | linebreaks }}
+                <hr>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No comment.</p>
+        {% endif %}
+    </div>
+{% endblock %}

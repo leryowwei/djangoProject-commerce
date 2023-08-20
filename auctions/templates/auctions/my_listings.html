@@ -1,0 +1,40 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>My Listings</h2>
+    {% if user.is_authenticated %}
+        {% if listings|length > 0 %}
+            {% for listing in listings %}
+                <div>
+                   <table style="width:80%">
+                        <tr>
+                            <td rowspan="5" class='td-index-img'><img alt={{ listing.name }} src="{{ listing.image }}" style="width:250px"></td>
+                            <td class='td-index-name'><a href="{% url 'listing' listing_name=listing.name  %}">{{ listing.name }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>{{ listing.description }}</td>
+                        </tr>
+                        <tr>
+                            <td>Current Bid Price: ${{ listing.get_highest_bid_price }}</td>
+                        </tr>
+                        <tr>
+                            <td>Created On: {{ listing.created_on }}</td>
+                        </tr>
+                        <tr>
+                            {% if listing.active %}
+                                <td style="color:green">Status: Active</td>
+                            {% else %}
+                                <td style="color:red">Status: Closed</td>
+                            {% endif %}
+                        </tr>
+                   </table>
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            You do not have any listing. To create your own listing, click 'Create Listing'.
+        {% endif %}
+    {% else %}
+        Please login to access your listings/ register for an account to create your first listing.
+    {% endif %}
+{% endblock %}

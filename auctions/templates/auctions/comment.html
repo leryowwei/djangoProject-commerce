@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Add Comment for {{ listing.name }}</h2>
+    {% if user.is_authenticated %}
+        {% if form.errors %}
+            {% for error in form.non_field_errors  %}
+              <p class='msg-error'>Error: {{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <table style="width:80%">
+                <tr>
+                    <td>Comment: </td>
+                    <td>{{ form.body }}</td>
+                </tr>
+                <tr>
+                    {% if form.name.errors %}
+                        <td class='msg-error' colspan="2">{{ form.body.label}} error: {{ form.body.errors | striptags }}</td>
+                    {% endif %}
+                </tr>
+            </table>
+            {{ form.author.as_hidden }}
+            {{ form.listing.as_hidden }}
+            <br>
+            <button value="Submit">Submit</button>
+        </form>
+    {% else %}
+        Please login or register to add comment to a listing.
+    {% endif %}
+{% endblock %}
+
